@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Checklist Evaluation</h1>
+    <div id="results">
+      <p>Fetching results...</p>
+    </div>
+  </div>
+
+  <script>
+    async function fetchResults() {
+      try {
+        const response = await fetch('/checklist');
+        const results = await response.json();
+        displayResults(results);
+      } catch (error) {
+        console.error('Error fetching results:', error);
+        document.getElementById('results').innerHTML = '<p>Error loading data</p>';
+      }
+    }
+
+    function displayResults(results) {
+      const resultDiv = document.getElementById('results');
+      resultDiv.innerHTML = `
+        <p><strong>Valuation Fee Paid:</strong> ${results.valuationFeePaid ? 'Passed' : 'Failed'}</p>
+        <p><strong>UK Resident:</strong> ${results.ukResident ? 'Passed' : 'Failed'}</p>
+        <p><strong>Risk Rating (Medium):</strong> ${results.riskRating ? 'Passed' : 'Failed'}</p>
+        <p><strong>LTV Below 60%:</strong> ${results.ltvBelow60 ? 'Passed' : 'Failed'}</p>
+      `;
+    }
+
+    // Load results on page load
+    window.onload = fetchResults;
+  </script>
+</body>
+</html>
